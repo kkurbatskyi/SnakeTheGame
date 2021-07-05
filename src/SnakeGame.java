@@ -29,9 +29,9 @@ public class SnakeGame
 	private void play(){
 		snake.move();
 		//if the snake is dead - lose
-		if(snake.speed() == 0)lose();
+		if(snake.speed() == 0){ lose(); return; }
 		//if there is no more room left on the map - win
-		if(snake.length() == map.getScale().x * map.getScale().y)win();
+		if(snake.length() == map.getScale().x * map.getScale().y){ win(); return; }
 		//check if snake moved over any food
 		for(Food f : food) {
 			if (snake.head().getPosition().x == f.getPosition().x && snake.head().getPosition().y == f.getPosition().y){
@@ -44,10 +44,15 @@ public class SnakeGame
 		fillMap();
 	}
 	
+	
 	private void fillMap()
 	{
 		map.reset();
 		for(Cell c : snake.body()){
+			//snake bashes against the bottom and right walls
+			if(c.getPosition().x > map.getScale().x || c.getPosition().y > map.getScale().y ) {
+				lose();
+			}
 			map.setCellAt(c.getPosition(), c);
 		}
 		for(Food c : food){
@@ -70,7 +75,6 @@ public class SnakeGame
 	{
 		Random rand = new Random();
 		int luck = Math.abs(rand.nextInt() % 100);
-		System.out.println(luck);
 		if(luck < 10)return new Superfood(new Point(x, y));
 		else return new Pellet(new Point(x, y));
 	}
