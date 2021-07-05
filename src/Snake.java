@@ -40,6 +40,7 @@ public class Snake
 	};
 	
 	public void move(){
+		//if the snake is not moving, dont do the moving actions
 		if(direction.x == direction.y && direction.y == 0)return;
 		for(int i = length() - 1; i > 0; i--){
 			body.get(i).setPosition(body.get(i - 1).getPosition());
@@ -47,11 +48,13 @@ public class Snake
 		try {
 			head().move(direction);
 		}
+		//bashed into the walls
 		catch (IndexOutOfBoundsException e){
 			die();
 		}
+		//see if the snake had ate itself
 		for(Cell c : body){
-			if (c != head() && c.getPosition() == head().getPosition())die();
+			if (c != head() && (c.getPosition().x == head().getPosition().x && c.getPosition().y == head().getPosition().y))die();
 		}
 	};
 	
