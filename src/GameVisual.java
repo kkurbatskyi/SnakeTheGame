@@ -1,8 +1,12 @@
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 class GameVisual extends JComponent
@@ -14,6 +18,7 @@ class GameVisual extends JComponent
 	private Timer timer;
 	
 	private final int TICK = 1000/60;
+	private final String BACKGROUND_ICON = "/grass.png";
 	
 	public GameVisual(int width, int height)
 	{
@@ -22,7 +27,7 @@ class GameVisual extends JComponent
 		game = new SnakeGame();
 		this.width = width;
 		this.height = height;
-		this.cellSize = new Point(width / game.map().getScale().x, height / game.map().getScale().y);
+		this.cellSize = new Point(height / game.map().getScale().x, width / game.map().getScale().y);
 		
 		addKeyListener(new snakeMoveListener());
 		
@@ -43,20 +48,40 @@ class GameVisual extends JComponent
 	}
 	
 	public void paintComponent(Graphics2D g2){
-		int currentX = 1;
-		int currentY = 1;
+		int currentX = 0;
+		int currentY = 0;
 		//g2.clearRect(0, 0, this.getWidth(), this.getHeight());
+		try {
+			g2.drawImage(ImageIO.read(getClass().getResourceAsStream(BACKGROUND_ICON)), currentX, currentY, null);
+		} catch (IOException e) {
+			currentY = 1;
+			for(ArrayList<Cell> list : game.map().returnTable()){
+				currentX = 1;
+				for(Cell c : list){
+					if(c.getColor() != null){
+						g2.setColor(c.getColor());
+						g2.fillRect(currentX, currentY, cellSize.x, cellSize.y);
+					}
+					else g2.drawImage(c.getSprite(),currentX, currentY, cellSize.x, cellSize.y, null);
+					currentX += cellSize.x;
+				}
+				currentY += cellSize.y;
+			}
+		}
+		
 		for(ArrayList<Cell> list : game.map().returnTable()){
 			currentX = 1;
 			for(Cell c : list){
-				if(c.getColor() != null){
-					g2.setColor(c.getColor());
-					g2.fillRect(currentX, currentY, cellSize.x, cellSize.y);
+				//only draw a Cell if it is NOT empty
+				if(c.getColor() != Color.WHITE) {
+					if (c.getSprite() == null) {
+						g2.setColor(c.getColor());
+						g2.fillRect(currentX, currentY, cellSize.x, cellSize.y);
+					} else g2.drawImage(c.getSprite(), currentX, currentY, cellSize.x, cellSize.y, null);
 				}
-				else g2.drawImage(c.getSprite(),currentX, currentY, cellSize.x, cellSize.y, null);
-				currentX += cellSize.x + 1;
+				currentX += cellSize.x;
 			}
-			currentY += cellSize.y + 1;
+			currentY += cellSize.y;
 		}
 	}
 	
@@ -67,10 +92,30 @@ class GameVisual extends JComponent
 		public void keyPressed(KeyEvent e)
 		{
 			switch (e.getKeyCode()) {
-				case KeyEvent.VK_UP -> game.snake().setDirection(new Point(-1, 0));
-				case KeyEvent.VK_RIGHT -> game.snake().setDirection(new Point(0, 1));
-				case KeyEvent.VK_DOWN -> game.snake().setDirection(new Point(1, 0));
-				case KeyEvent.VK_LEFT -> game.snake().setDirection(new Point(0, -1));
+				case KeyEvent.VK_UP -> {
+					Point newDir = new Point(-1, 0);
+					//check if the snake is trying to go backwards
+					if(!(game.snake().direction().x + newDir.x == 0 && game.snake().direction().y + newDir.y == 0))
+						game.snake().setDirection(newDir);
+				}
+				case KeyEvent.VK_RIGHT ->{
+						Point newDir = new Point(0, 1);
+						//check if the snake is trying to go backwards
+						if(!(game.snake().direction().x + newDir.x == 0 && game.snake().direction().y + newDir.y == 0))
+							game.snake().setDirection(newDir);
+				}
+				case KeyEvent.VK_DOWN ->{
+					Point newDir = new Point(1, 0);
+					//check if the snake is trying to go backwards
+					if(!(game.snake().direction().x + newDir.x == 0 && game.snake().direction().y + newDir.y == 0))
+						game.snake().setDirection(newDir);
+				}
+				case KeyEvent.VK_LEFT ->{
+					Point newDir = new Point(0, -1);
+					//check if the snake is trying to go backwards
+					if(!(game.snake().direction().x + newDir.x == 0 && game.snake().direction().y + newDir.y == 0))
+						game.snake().setDirection(newDir);
+				}
 			}
 		}
 	}

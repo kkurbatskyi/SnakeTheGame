@@ -34,14 +34,16 @@ public class Map
 		return scale;
 	};
 	
+	//GETTERS
 	public Cell getCellAt(Point p){
 		return table.get((int)p.getX()).get((int)p.getY());
 	};
 	public Cell getCellAt(int x, int y){
 		return table.get(x).get(y);
 	};
-	
-	public void setCellAt(Point p, Cell cell){
+	//SETTERS
+	public void setCellAt(Point p, Cell cell)throws IndexOutOfBoundsException{
+		if(p.x > scale.x || p.y > scale.y) throw new IndexOutOfBoundsException();
 		table.get((int)p.getX()).set((int)p.getY(), cell);
 	};
 	public void setCellAt(int x, int y, Cell cell){

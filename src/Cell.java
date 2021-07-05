@@ -37,7 +37,8 @@ public class Cell
 	}
 	
 	public void move(Point direction)throws IndexOutOfBoundsException{
-		Point newPosition = new Point(position.x + direction.x, position.y + direction.y);
+		//+20 % 20 to make sure the snake does not bash against the walls and instead goes through on the other side
+		Point newPosition = new Point((position.x + direction.x + 20) % 20, (position.y + direction.y + 20) % 20);
 		if(newPosition.x < 0 || newPosition.y < 0)throw new IndexOutOfBoundsException();
 		else position = newPosition;
 	}
@@ -76,4 +77,5 @@ public class Cell
 	{
 		return (color == Color.WHITE && sprite == null);
 	}
+	
 }
