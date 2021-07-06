@@ -1,4 +1,5 @@
 import javax.swing.JFrame;
+import java.awt.*;
 
 class GameWindow extends JFrame{
 	
@@ -7,7 +8,7 @@ class GameWindow extends JFrame{
 	public final static int HEIGHT = 640;
 	
 	public GameWindow() {
-		setResizable(true);
+		setResizable(false);
 		setTitle("Homemade Snake");
 		visual = new GameVisual(WIDTH, HEIGHT);
 		setContentPane(visual);
@@ -15,8 +16,12 @@ class GameWindow extends JFrame{
 	
 	public static void main(String[]args){
 		GameWindow window = new GameWindow();
-		window.setSize(WIDTH, HEIGHT);
-		System.out.println(window.getWidth() + " " + window.getHeight());
+		
+		//to offset the usable window size to WIDTH and HEIGHT values add Insets to the window size
+		window.pack();
+		Insets insets = window.getInsets();
+		window.setSize(WIDTH + insets.left + insets.right, HEIGHT + insets.top + insets.bottom);
+		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
 		window.visual.start();

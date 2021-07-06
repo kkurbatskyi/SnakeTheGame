@@ -14,7 +14,7 @@ public class SnakeGame
 	
 	//the tick of the game
 	private Timer timer;
-	private final int TICK = 1000 / 6;
+	public final int TICK = 1000 / 6;
 
 	public SnakeGame(){
 		map = new Map();

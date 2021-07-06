@@ -28,6 +28,7 @@ class GameVisual extends JComponent
 		this.width = width;
 		this.height = height;
 		this.cellSize = new Point(height / game.map().getScale().x, width / game.map().getScale().y);
+		System.out.println(cellSize);
 		
 		addKeyListener(new snakeMoveListener());
 		
@@ -50,13 +51,11 @@ class GameVisual extends JComponent
 	public void paintComponent(Graphics2D g2){
 		int currentX = 0;
 		int currentY = 0;
-		//g2.clearRect(0, 0, this.getWidth(), this.getHeight());
 		try {
 			g2.drawImage(ImageIO.read(getClass().getResourceAsStream(BACKGROUND_ICON)), currentX, currentY, null);
 		} catch (IOException e) {
-			currentY = 1;
 			for(ArrayList<Cell> list : game.map().returnTable()){
-				currentX = 1;
+				currentX = 0;
 				for(Cell c : list){
 					if(c.getColor() != null){
 						g2.setColor(c.getColor());
@@ -69,8 +68,10 @@ class GameVisual extends JComponent
 			}
 		}
 		
+		currentX = 0;
+		currentY = 0;
 		for(ArrayList<Cell> list : game.map().returnTable()){
-			currentX = 1;
+			currentX = 0;
 			for(Cell c : list){
 				//only draw a Cell if it is NOT empty
 				if(c.getColor() != Color.WHITE) {
@@ -117,6 +118,7 @@ class GameVisual extends JComponent
 						game.snake().setDirection(newDir);
 				}
 			}
+
 		}
 	}
 	
