@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Pellet extends Food
 {
-	private final String PELLET_ICON = "/pellet.jpg";
+	private final String PELLET_ICON = "/pellet.png";
 	
 	public Pellet(Point position)
 	{super(1, 1, position);   icon = null; color = Color.ORANGE;
