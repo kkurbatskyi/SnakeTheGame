@@ -1,5 +1,8 @@
+import javax.imageio.ImageIO;
 import java.awt.Point;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Snake
@@ -7,10 +10,13 @@ public class Snake
 	private final int DEFAULT_LENGTH = 2;
 	//private final Point[] START_POSITION = {new Point(0, 0), new Point(0, 1)};
 	private final Color COLOR = Color.GREEN;
+	private final String HEAD_ICON = "/head.png";
+	private final String BODY_ICON = "/body.png";
 	
 	private int length; //initial 2
 	private ArrayList<Cell> body;
 	private Point direction;
+	private BufferedImage head_icon, body_icon;
 	
 	//Do I need you?
 	private int speed;
@@ -20,11 +26,13 @@ public class Snake
 		speed = 1;
 		direction = new Point(0, 0);
 		body = new ArrayList<Cell>();
-		/*for(int i = 0; i < length; i++){
-			body.add(new Cell(START_POSITION[i], COLOR));
-		}*/
-		body.add(new Cell(new Point(0, 1), COLOR));
-		body.add(new Cell(new Point(0, 0), COLOR));
+		try{
+		head_icon = ImageIO.read(getClass().getResourceAsStream(HEAD_ICON));
+		body_icon = ImageIO.read(getClass().getResourceAsStream(BODY_ICON));
+		} catch (IOException e) { head_icon = null; body_icon = null; }
+	
+		body.add(new Cell(new Point(0, 1), COLOR, head_icon));
+		body.add(new Cell(new Point(0, 0), COLOR, body_icon));
 	};
 	
 	public void die(){
@@ -35,7 +43,7 @@ public class Snake
 	public void consume(Food food){
 		for(int i = food.getNutrition(); i > 0; i--){
 			this.length++;
-			body.add(new Cell(body.get(body.size() - 1).getPosition(), COLOR));
+			body.add(new Cell(body.get(body.size() - 1).getPosition(), COLOR, body_icon));
 		}
 	};
 	
