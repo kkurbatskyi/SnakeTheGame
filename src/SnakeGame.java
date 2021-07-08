@@ -11,57 +11,85 @@ public class SnakeGame
 	private Snake snake;
 	private ArrayList<Food> food;
 	private int score;
+	private boolean lost;
+	private boolean won;
+	
 	
 	//the tick of the game
 	private Timer timer;
-	public final int TICK = 1000 / 6;
+	public final int TICK = 1000 / 6; //1000/6 - default
 
 	public SnakeGame(){
-		map = new Map();
+		map = new Map(20, 20);
 		snake = new Snake();
 		food = new ArrayList<>();
 		spawnFood();
 		score = 0;
+		lost = false; won = false;
 		
 		timer = new Timer(TICK, (a) -> this.play());
 	}
 	
+	//lose is checked before filling the map to prevent head from moving over the body
+	//win is checked after filling the map to ensure eating of the last piece of food
 	private void play(){
 		snake.move();
+		//make snake go through walls coming out from the other side
 		//if the snake is dead - lose
 		if(snake.speed() == 0){ lose(); return; }
-		//if there is no more room left on the map - win
-		if(snake.length() == map.getScale().x * map.getScale().y){ win(); return; }
+		Point position = snake.head().getPosition();
+		snake.head().setPosition(new Point((position.x + map.getScale().x) % map.getScale().x, (position.y + map.getScale().y) % map.getScale().y));
+		
 		//check if snake moved over any food
-		for(Food f : food) {
+		for(int i = 0; i < food.size(); i++) {
+			Food f = food.get(i);
 			if (snake.head().getPosition().x == f.getPosition().x && snake.head().getPosition().y == f.getPosition().y){
 				snake.consume(f);
 				score += f.getScore();
 				food.remove(f);
+				//unless snake has already won, create new food
 				spawnFood();
 			}
 		}
 		fillMap();
+		
+		//no food left and the length of the snake is the area of the map - win
+		if(snake.length() > map.getScale().x * map.getScale().y && food.isEmpty()){ win(); }
 	}
 	
+	private boolean mapIsFull(){
+		boolean full = true;
+		for(int i = 0; i < map.getScale().x && full; i++){
+			for(int j = 0; j < map.getScale().y; j++){
+				if(map.getCellAt(i, j).isFree()){ full = false; break; }
+			}
+		}
+		return full;
+	}
 	
 	private void fillMap()
 	{
 		map.reset();
-		for(Cell c : snake.body()){
-			//snake bashes against the bottom and right walls
-			if(c.getPosition().x > map.getScale().x || c.getPosition().y > map.getScale().y ) {
-				lose();
-			}
-			map.setCellAt(c.getPosition(), c);
-		}
 		for(Food c : food){
 			map.setCellAt(c.getPosition(), new Cell(c.getPosition(), c.getColor(), c.getIcon()));
+		}
+		for(Cell c : snake.body()){
+			/*
+			//snake bashes against the bottom and right walls
+			if(c.getPosition().x > (map.getScale().x - 1) || c.getPosition().y > (map.getScale().y - 1) ) {
+				lose(); break;
+			}
+			if(c.getPosition().x < 0 || c.getPosition().y < 0 ) {
+				lose(); break;
+			}
+			*/
+			map.setCellAt(c.getPosition(), c);
 		}
 	}
 	
 	private void spawnFood()
 	{
+		if(mapIsFull())return;
 		Random random = new Random();
 		boolean found = false;
 		while(!found){
@@ -81,10 +109,14 @@ public class SnakeGame
 	
 	public void win(){
 		System.out.println("You won! Score:" + score);
+		//draw the map one last time to "consume" the last piece of food on the map
+		fillMap();
+		won = true;
 		timer.stop();
 	}
 	public void lose(){
 		System.out.println("You lost! Score:" + score);
+		lost = true;
 		timer.stop();
 	}
 	
@@ -99,4 +131,20 @@ public class SnakeGame
 	{
 		timer.start();
 	}
+	
+	public int score()
+	{
+		return score;
+	}
+	
+	public boolean lost()
+	{
+		return lost;
+	}
+	
+	public boolean won()
+	{
+		return won;
+	}
+	
 }
