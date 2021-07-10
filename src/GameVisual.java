@@ -182,6 +182,9 @@ class GameVisual extends JComponent
 					game.start();
 					timeOfStart = ZonedDateTime.now().toInstant().toEpochMilli();
 				}
+				case KeyEvent.VK_ESCAPE ->{
+							System.exit(0);
+				}
 			}
 
 		}
