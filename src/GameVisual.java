@@ -64,7 +64,7 @@ class GameVisual extends JComponent
 		
 		drawTheGame(g2);
 		
-		if(game.lost() || game.won())drawFinalScreen(g2);
+		if(game.lost() || game.won()) { drawFinalScreen(g2); }
 	}
 	
 	private void drawFinalScreen(Graphics2D g2)
