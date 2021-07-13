@@ -108,14 +108,12 @@ public class SnakeGame
 	}
 	
 	public void win(){
-		System.out.println("You won! Score:" + score);
 		//draw the map one last time to "consume" the last piece of food on the map
 		fillMap();
 		won = true;
 		timer.stop();
 	}
 	public void lose(){
-		System.out.println("You lost! Score:" + score);
 		lost = true;
 		timer.stop();
 	}

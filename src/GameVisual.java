@@ -35,7 +35,6 @@ class GameVisual extends JComponent
 		this.height = height;
 		this.infoBarHeight = infoBarHeight;
 		this.cellSize = new Point(height / game.map().getScale().x, width / game.map().getScale().y);
-		System.out.println(cellSize);
 		
 		addKeyListener(new snakeMoveListener());
 		
