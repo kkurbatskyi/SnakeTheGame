@@ -148,33 +148,43 @@ class GameVisual extends JComponent
 	
 	private class snakeMoveListener extends KeyAdapter
 	{
+		private long actionTime = 0;
+		
 		@Override
 		public void keyPressed(KeyEvent e)
 		{
+			//if the time needed to process the previous action hadnt passed yet, we cant make the next action
+			//avoids the bug of the snake stepping inside itself and causing a loss
+			if(ZonedDateTime.now().toInstant().toEpochMilli() - actionTime < game.TICK)return;
+			
 			switch (e.getKeyCode()) {
 				case KeyEvent.VK_UP, KeyEvent.VK_W -> {
 					Point newDir = new Point(-1, 0);
 					//check if the snake is trying to go backwards
 					if(!(game.snake().direction().x + newDir.x == 0 && game.snake().direction().y + newDir.y == 0))
 						game.snake().setDirection(newDir);
+					else return;
 				}
 				case KeyEvent.VK_RIGHT, KeyEvent.VK_D ->{
 						Point newDir = new Point(0, 1);
 						//check if the snake is trying to go backwards
 						if(!(game.snake().direction().x + newDir.x == 0 && game.snake().direction().y + newDir.y == 0))
 							game.snake().setDirection(newDir);
+						else return;
 				}
 				case KeyEvent.VK_DOWN, KeyEvent.VK_S ->{
 					Point newDir = new Point(1, 0);
 					//check if the snake is trying to go backwards
 					if(!(game.snake().direction().x + newDir.x == 0 && game.snake().direction().y + newDir.y == 0))
 						game.snake().setDirection(newDir);
+					else return;
 				}
 				case KeyEvent.VK_LEFT, KeyEvent.VK_A ->{
 					Point newDir = new Point(0, -1);
 					//check if the snake is trying to go backwards
 					if(!(game.snake().direction().x + newDir.x == 0 && game.snake().direction().y + newDir.y == 0))
 						game.snake().setDirection(newDir);
+					else return;
 				}
 				case KeyEvent.VK_R ->{
 					game = new SnakeGame();
@@ -185,6 +195,7 @@ class GameVisual extends JComponent
 							System.exit(0);
 				}
 			}
+			actionTime = ZonedDateTime.now().toInstant().toEpochMilli();
 
 		}
 	}
