@@ -74,15 +74,6 @@ public class SnakeGame
 			map.setCellAt(c.getPosition(), new Cell(c.getPosition(), c.getColor(), c.getIcon()));
 		}
 		for(Cell c : snake.body()){
-			/*
-			//snake bashes against the bottom and right walls
-			if(c.getPosition().x > (map.getScale().x - 1) || c.getPosition().y > (map.getScale().y - 1) ) {
-				lose(); break;
-			}
-			if(c.getPosition().x < 0 || c.getPosition().y < 0 ) {
-				lose(); break;
-			}
-			*/
 			map.setCellAt(c.getPosition(), c);
 		}
 	}
