@@ -16,7 +16,7 @@ public class SnakeGame
 	
 	
 	//the tick of the game
-	private Timer timer;
+	private final Timer timer;
 	public final int TICK = 1000 / 6; //1000/6 - default
 
 	public SnakeGame(){
