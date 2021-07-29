@@ -82,7 +82,7 @@ class GameVisual extends JComponent
 				width - (width / 2) - (width / 6));;
 		
 		g2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 40));
-		g2.drawString(game.won()?"WINNER":"LOSER", 5, (height - (height / 2) - (height / 6)) / 4);
+		g2.drawString(game.won()?"WINNER":"LOSER", height / 9, (height - (height / 2) - (height / 4)) / 4);
 		g2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
 		g2.drawString("Score: " + game.score(), 20, (height - (height / 2) - (height / 6)) / 2);
 		g2.drawString("Press R to Restart", 5, (int)((height - (height / 2) - (height / 6)) * 0.875));
@@ -153,7 +153,7 @@ class GameVisual extends JComponent
 		@Override
 		public void keyPressed(KeyEvent e)
 		{
-			//if the time needed to process the previous action hadnt passed yet, we cant make the next action
+			//if the time needed to process the previous action hadn't passed yet, we cant make the next action
 			//avoids the bug of the snake stepping inside itself and causing a loss
 			if(ZonedDateTime.now().toInstant().toEpochMilli() - actionTime < game.TICK)return;
 			
